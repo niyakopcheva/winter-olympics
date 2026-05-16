@@ -1,6 +1,4 @@
 package org.example.data;
-
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.UUID;
 
