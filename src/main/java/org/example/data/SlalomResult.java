@@ -1,31 +1,31 @@
 package org.example.data;
 
-import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.UUID;
 
 public class SlalomResult extends Result {
-    private BigDecimal firstRunTime = BigDecimal.ZERO;
-    private BigDecimal secondRunTime = BigDecimal.ZERO;
+    private Duration firstRunTime = Duration.ofMillis(0);
+    private Duration secondRunTime = Duration.ofMillis(0);
 
     public SlalomResult(UUID athleteId) {
         super(athleteId);
     }
 
-    public BigDecimal getFirstRunTime() {
+    public Duration getFirstRunTime() {
         return firstRunTime;
     }
 
-    public void setFirstRunTime(BigDecimal firstRunTime) {
-        if (firstRunTime.compareTo(null) == 0) setDNF(true);
+    public void setFirstRunTime(Duration firstRunTime) {
+        if (firstRunTime == null) setDNF(true);
         this.firstRunTime = firstRunTime;
     }
 
-    public BigDecimal getSecondRunTime() {
+    public Duration getSecondRunTime() {
         return secondRunTime;
     }
 
-    public void setSecondRunTime(BigDecimal secondRunTime) {
-        if (secondRunTime.compareTo(null) == 0) setDNF(true);
+    public void setSecondRunTime(Duration secondRunTime) {
+        if (secondRunTime == null) setDNF(true);
         this.secondRunTime = secondRunTime;
     }
 
