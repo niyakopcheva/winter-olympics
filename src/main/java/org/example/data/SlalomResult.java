@@ -31,7 +31,7 @@ public class SlalomResult extends Result {
         return secondRunTime;
     }
 
-    public void setSecondRunTime(Duration secondRunTime) {
+    public void setSecondRunTime(Duration secondRunTime) throws NegativeValueException{
         if (secondRunTime == null) {
             setDNF(true);
             return;
