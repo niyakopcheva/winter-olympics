@@ -15,7 +15,9 @@ public class SkiSlalomCompetition extends Competition {
         return results;
     }
 
-    public void setResults(List<SlalomResult> results) {
+    public void setResults(List<SlalomResult> results) throws IllegalArgumentException{
+        if(results == null)
+            throw new IllegalArgumentException("Results cannot be null!");
         this.results = results;
     }
 
