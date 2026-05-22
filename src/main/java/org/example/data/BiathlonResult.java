@@ -5,8 +5,7 @@ import java.util.UUID;
 
 public class BiathlonResult extends Result {
     private Duration runTime = Duration.ofMillis(0);
-    private int missedShots = 0;
-    private static Duration timePenalty = Duration.ofMinutes(1);
+    private int missedShots = -1;
 
     public BiathlonResult(UUID athleteId) {
         super(athleteId);
@@ -16,7 +15,15 @@ public class BiathlonResult extends Result {
         return runTime;
     }
 
-    public void setRunTime(Duration runTime) {
+    public void setRunTime(Duration runTime) throws NegativeValueException {
+        if (runTime == null) {
+            setDNF(true);
+            this.runTime = null;
+            return;
+        }
+
+        if(runTime.isNegative())
+            throw new NegativeValueException("Runtime value cannot be negative!");
         this.runTime = runTime;
     }
 
@@ -24,16 +31,16 @@ public class BiathlonResult extends Result {
         return missedShots;
     }
 
-    public void setMissedShots(int missedShots) {
+    public void setMissedShots(Integer missedShots) throws NegativeValueException {
+        if(missedShots == null) {
+            setDNF(true);
+            return;
+        }
+
+        if(missedShots<0)
+            throw new NegativeValueException("Missed shots value cannot be negative!");
+
         this.missedShots = missedShots;
-    }
-
-    public static Duration getTimePenalty() {
-        return timePenalty;
-    }
-
-    public static void setTimePenalty(Duration timePenalty) {
-        BiathlonResult.timePenalty = timePenalty;
     }
 
     @Override

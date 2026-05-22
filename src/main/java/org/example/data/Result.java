@@ -2,8 +2,8 @@ package org.example.data;
 import java.time.Duration;
 import java.util.UUID;
 
-public class Result {
-    private UUID athleteId;
+public abstract class Result {
+    private final UUID athleteId;
     private Duration totalTime = Duration.ofMillis(0);
     private boolean isDNF = false;
 
@@ -15,15 +15,12 @@ public class Result {
         return athleteId;
     }
 
-    public void setAthleteId(UUID athleteId) {
-        this.athleteId = athleteId;
-    }
-
     public Duration getTotalTime() {
         return totalTime;
     }
 
     public void setTotalTime(Duration totalTime) {
+
         this.totalTime = totalTime;
     }
 
