@@ -1,4 +1,7 @@
-package org.example.data;
+package org.example.data.SkiSlalom;
+
+import org.example.data.Competition;
+import org.example.data.enums.Sex;
 
 import java.util.ArrayList;
 import java.util.List;

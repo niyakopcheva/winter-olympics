@@ -1,4 +1,7 @@
 package org.example.data;
+import org.example.data.enums.Sex;
+import org.example.data.exceptions.NegativeValueException;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +20,7 @@ public abstract class Competition {
         return minAge;
     }
 
-    public void setMinAge(int minAge) throws NegativeValueException{
+    public void setMinAge(int minAge) throws NegativeValueException {
         if(minAge < 0)
             throw new NegativeValueException("minAge value cannot be negative!");
         this.minAge = minAge;

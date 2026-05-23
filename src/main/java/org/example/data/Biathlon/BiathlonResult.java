@@ -1,4 +1,7 @@
-package org.example.data;
+package org.example.data.Biathlon;
+
+import org.example.data.Result;
+import org.example.data.exceptions.NegativeValueException;
 
 import java.time.Duration;
 import java.util.UUID;

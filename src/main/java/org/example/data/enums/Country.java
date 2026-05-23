@@ -1,4 +1,4 @@
-package org.example.data;
+package org.example.data.enums;
 
 public enum Country {
     ALBANIA, ANDORRA, ARGENTINA, ARMENIA, AUSTRALIA, AUSTRIA, AZERBAIJAN,

@@ -1,4 +1,7 @@
-package org.example.data;
+package org.example.data.SkiSlalom;
+
+import org.example.data.Result;
+import org.example.data.exceptions.NegativeValueException;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -15,7 +18,7 @@ public class SlalomResult extends Result {
         return firstRunTime;
     }
 
-    public void setFirstRunTime(Duration firstRunTime) throws NegativeValueException{
+    public void setFirstRunTime(Duration firstRunTime) throws NegativeValueException {
         if (firstRunTime == null) {
             setDNF(true);
             return;

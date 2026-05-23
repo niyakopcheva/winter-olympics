@@ -1,5 +1,8 @@
 package org.example.data;
 
+import org.example.data.enums.Country;
+import org.example.data.enums.Sex;
+
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;

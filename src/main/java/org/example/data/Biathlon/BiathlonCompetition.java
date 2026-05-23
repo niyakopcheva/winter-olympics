@@ -1,4 +1,8 @@
-package org.example.data;
+package org.example.data.Biathlon;
+
+import org.example.data.Competition;
+import org.example.data.enums.Sex;
+import org.example.data.exceptions.NegativeValueException;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -30,7 +34,7 @@ public class BiathlonCompetition extends Competition {
         return timePenalty;
     }
 
-    public void setTimePenalty(Duration timePenalty) throws IllegalArgumentException, NegativeValueException{
+    public void setTimePenalty(Duration timePenalty) throws IllegalArgumentException, NegativeValueException {
         if(timePenalty == null)
             throw new IllegalArgumentException("TimePenalty cannot be null!");
         if(timePenalty.isNegative() || timePenalty.isZero())

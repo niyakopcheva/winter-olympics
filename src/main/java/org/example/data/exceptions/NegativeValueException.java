@@ -1,4 +1,4 @@
-package org.example.data;
+package org.example.data.exceptions;
 
 public class NegativeValueException extends RuntimeException {
     public NegativeValueException(String message) {
