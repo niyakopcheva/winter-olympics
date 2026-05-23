@@ -2,18 +2,13 @@ package org.example.data;
 import org.example.data.enums.Sex;
 import org.example.data.exceptions.NegativeValueException;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public abstract class Competition {
     private int minAge;
     private Sex sex;
-    private Set<Athlete> participants;
 
     public Competition(int minAge, Sex sex) {
         setMinAge(minAge);
         setSex(sex);
-        participants = new HashSet<>();
     }
 
     public int getMinAge() {
@@ -36,18 +31,8 @@ public abstract class Competition {
         this.sex = sex;
     }
 
-    public Set<Athlete> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(Set<Athlete> participants) throws IllegalArgumentException{
-        if(participants == null)
-            throw new IllegalArgumentException("Participants cannot be null!");
-        this.participants = participants;
-    }
-
     @Override
     public String toString() {
-        return "Competition{" + "minAge=" + minAge + ", sex=" + sex + ", participants=" + participants + '}';
+        return "Competition{" + "minAge=" + minAge + ", sex=" + sex + '}';
     }
 }
