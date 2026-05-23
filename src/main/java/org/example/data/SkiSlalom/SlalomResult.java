@@ -21,7 +21,6 @@ public class SlalomResult extends Result {
     public void setFirstRunTime(Duration firstRunTime) throws NegativeValueException {
         if (firstRunTime == null) {
             setDNF(true);
-            return;
         }
 
         if(firstRunTime.isNegative() || firstRunTime.isZero())
