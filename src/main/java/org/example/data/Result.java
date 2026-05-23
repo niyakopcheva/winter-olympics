@@ -1,8 +1,9 @@
 package org.example.data;
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.UUID;
 
-public abstract class Result {
+public abstract class Result implements Serializable {
     private final UUID athleteId;
     private Duration totalTime = Duration.ofMillis(0);
     private boolean isDNF = false;

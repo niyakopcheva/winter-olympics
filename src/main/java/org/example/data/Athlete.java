@@ -1,6 +1,7 @@
 package org.example.data;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Athlete {
@@ -60,6 +61,18 @@ public class Athlete {
         if(birthDate == null)
             throw new IllegalArgumentException("BirthDate cannot be null!");
         this.birthDate = birthDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Athlete athlete = (Athlete) o;
+        return Objects.equals(id, athlete.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     @Override
