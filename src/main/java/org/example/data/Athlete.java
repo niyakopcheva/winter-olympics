@@ -3,7 +3,7 @@ package org.example.data;
 import org.example.data.enums.Country;
 import org.example.data.enums.Sex;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,9 +12,9 @@ public class Athlete {
     private String name;
     private Country country;
     private Sex sex;
-    private Date birthDate;
+    private LocalDate birthDate;
 
-    public Athlete(String name, Country country, Sex sex, Date birthDate) {
+    public Athlete(String name, Country country, Sex sex, LocalDate birthDate) {
         this.id = UUID.randomUUID();
         setName(name);
         setCountry(country);
@@ -56,11 +56,11 @@ public class Athlete {
         this.sex = sex;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) throws IllegalArgumentException{
+    public void setBirthDate(LocalDate birthDate) throws IllegalArgumentException{
         if(birthDate == null)
             throw new IllegalArgumentException("BirthDate cannot be null!");
         this.birthDate = birthDate;

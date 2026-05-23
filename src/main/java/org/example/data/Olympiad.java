@@ -1,19 +1,20 @@
 package org.example.data;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Olympiad {
-    private final int year;
+    private final LocalDate startDate;
     private List<Competition> competitions;
 
-    public Olympiad(int year) {
-        this.year = year;
-        this.competitions = new ArrayList<>();
+    public Olympiad(LocalDate startDate, List<Competition> competitions) {
+        this.startDate = startDate;
+        setCompetitions(competitions);
     }
 
-    public int getYear() {
-        return year;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
     public List<Competition> getCompetitions() {
