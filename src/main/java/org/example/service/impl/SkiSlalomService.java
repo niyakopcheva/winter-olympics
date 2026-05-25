@@ -1,9 +1,9 @@
 package org.example.service.impl;
 
 import org.example.data.Athlete;
-import org.example.data.Competition;
 import org.example.data.SkiSlalom.SkiSlalomCompetition;
 import org.example.data.SkiSlalom.SlalomResult;
+import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.data.exceptions.AthleteNotQualifiedException;
 import org.example.service.ISkiSlalomService;
 
@@ -58,11 +58,26 @@ public class SkiSlalomService extends CompetitionService implements ISkiSlalomSe
     }
 
     @Override
-    public void printFinalRanking(SkiSlalomCompetition slalomCompetition) {
-//        PriorityQueue<SlalomResult> finalResults
+    public void printFinalRanking(SkiSlalomCompetition slalomCompetition, AthleteService athleteService) {
+        PriorityQueue<SlalomResult> finalResults = getFinalRanking(slalomCompetition.getResults());
+        int place = 1;
+        while (!finalResults.isEmpty()){
+            Optional<Athlete> athleteOpt = athleteService.getAthleteById(finalResults.poll().getAthleteId());
+            if(athleteOpt.isEmpty())
+                throw new AthleteDoesNotExist();
+
+            Athlete athlete = athleteOpt.get();
+            System.out.println(place + ": " + athlete.getName() + " - " + athlete.getCountry());
+            place++;
+        }
     }
 
-//    private PriorityQueue<SlalomResult> getFinalRanking(){
-//
-//    }
+    private PriorityQueue<SlalomResult> getFinalRanking(List<SlalomResult> results){
+        PriorityQueue<SlalomResult> ranking = new PriorityQueue<>(Comparator
+                .comparing(SlalomResult::isDNF)
+                .thenComparing(SlalomResult::getTotalTime)
+        );
+        ranking.addAll(results);
+        return ranking;
+    }
 }

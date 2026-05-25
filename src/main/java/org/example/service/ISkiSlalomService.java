@@ -3,6 +3,7 @@ package org.example.service;
 import org.example.data.Athlete;
 import org.example.data.SkiSlalom.SkiSlalomCompetition;
 import org.example.data.SkiSlalom.SlalomResult;
+import org.example.service.impl.AthleteService;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -14,5 +15,5 @@ public interface ISkiSlalomService {
     List<SlalomResult> filterToSecondRun(SkiSlalomCompetition skiSlalomCompetition);
     void inputSecondRun(SkiSlalomCompetition competition, UUID athleteId, Duration time);
     void calculateTotalTimes(SkiSlalomCompetition slalomCompetition);
-    void printFinalRanking(SkiSlalomCompetition slalomCompetition);
+    void printFinalRanking(SkiSlalomCompetition slalomCompetition, AthleteService athleteService);
 }
