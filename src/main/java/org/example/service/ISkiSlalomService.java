@@ -1,12 +1,10 @@
 package org.example.service;
 
-import org.example.data.Athlete;
 import org.example.data.SkiSlalom.SkiSlalomCompetition;
 import org.example.data.SkiSlalom.SlalomResult;
 import org.example.service.impl.AthleteService;
 
 import java.time.Duration;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
