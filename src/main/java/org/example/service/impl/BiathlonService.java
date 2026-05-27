@@ -1,10 +1,7 @@
 package org.example.service.impl;
 
-import org.example.data.Athlete;
 import org.example.data.Biathlon.BiathlonCompetition;
 import org.example.data.Biathlon.BiathlonResult;
-import org.example.data.SkiSlalom.SlalomResult;
-import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.service.IBiathlonService;
 
 import java.time.Duration;

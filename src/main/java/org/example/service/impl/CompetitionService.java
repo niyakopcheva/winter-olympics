@@ -3,14 +3,13 @@ package org.example.service.impl;
 import org.example.data.Athlete;
 import org.example.data.Competition;
 import org.example.data.Result;
-import org.example.data.SkiSlalom.SkiSlalomCompetition;
-import org.example.data.SkiSlalom.SlalomResult;
 import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.service.ICompetitionService;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CompetitionService implements ICompetitionService {
     @Override
@@ -38,11 +37,13 @@ public class CompetitionService implements ICompetitionService {
     }
 
     protected <T extends Result> PriorityQueue<T> getFinalRanking(List<T> results){
+        List<T> finished = results.stream()
+                .filter(r -> !r.isDNF())
+                .collect(Collectors.toList());
         PriorityQueue<T> ranking = new PriorityQueue<>(Comparator
-                .comparing(Result::isDNF)
-                .thenComparing(Result::getTotalTime)
+                .comparing(Result::getTotalTime)
         );
-        ranking.addAll(results);
+        ranking.addAll(finished);
         return ranking;
     }
 
@@ -59,7 +60,7 @@ public class CompetitionService implements ICompetitionService {
             System.out.println(place + ". " +
                     athlete.getName() + " - " +
                     athlete.getCountry() + " | " +
-                    (result.isDNF() ? "DNF" : result.getTotalTime())
+                    result.getTotalTime()
             );
             place++;
         }
