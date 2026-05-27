@@ -57,33 +57,12 @@ public class BiathlonService extends CompetitionService implements IBiathlonServ
 
     @Override
     public void calculateTotalTimes(BiathlonCompetition competition) {
-        for(BiathlonResult result : competition.getResults()){
-            if(!result.isDNF())
-                result.setTotalTime(calculatePenalty(competition, result).plus(result.getRunTime()));
-        }
+        coreCalculateTotalTimes(competition.getResults(),
+                r -> calculatePenalty(competition, r).plus(r.getRunTime()));
     }
 
     @Override
     public void printFinalRanking(BiathlonCompetition competition, AthleteService athleteService) {
-        PriorityQueue<BiathlonResult> finalResults = getFinalRanking(competition.getResults());
-        int place = 1;
-        while (!finalResults.isEmpty()){
-            Optional<Athlete> athleteOpt = athleteService.getAthleteById(finalResults.poll().getAthleteId());
-            if(athleteOpt.isEmpty())
-                throw new AthleteDoesNotExist();
-
-            Athlete athlete = athleteOpt.get();
-            System.out.println(place + ": " + athlete.getName() + " - " + athlete.getCountry());
-            place++;
-        }
-    }
-
-    private PriorityQueue<BiathlonResult> getFinalRanking(List<BiathlonResult> results){
-        PriorityQueue<BiathlonResult> ranking = new PriorityQueue<>(Comparator
-                .comparing(BiathlonResult::isDNF)
-                .thenComparing(BiathlonResult::getTotalTime)
-        );
-        ranking.addAll(results);
-        return ranking;
+        super.printFinalRanking(competition.getResults(), athleteService);
     }
 }

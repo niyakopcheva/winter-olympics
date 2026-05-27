@@ -49,35 +49,12 @@ public class SkiSlalomService extends CompetitionService implements ISkiSlalomSe
 
     @Override
     public void calculateTotalTimes(SkiSlalomCompetition slalomCompetition) {
-        for(SlalomResult result : slalomCompetition.getResults()){
-            if(result.isDNF())
-                result.setTotalTime(null);
-            else
-                result.setTotalTime(result.getFirstRunTime().plus(result.getSecondRunTime()));
-        }
+        coreCalculateTotalTimes(slalomCompetition.getResults(),
+                r -> r.getFirstRunTime().plus(r.getSecondRunTime()));
     }
 
     @Override
     public void printFinalRanking(SkiSlalomCompetition slalomCompetition, AthleteService athleteService) {
-        PriorityQueue<SlalomResult> finalResults = getFinalRanking(slalomCompetition.getResults());
-        int place = 1;
-        while (!finalResults.isEmpty()){
-            Optional<Athlete> athleteOpt = athleteService.getAthleteById(finalResults.poll().getAthleteId());
-            if(athleteOpt.isEmpty())
-                throw new AthleteDoesNotExist();
-
-            Athlete athlete = athleteOpt.get();
-            System.out.println(place + ": " + athlete.getName() + " - " + athlete.getCountry());
-            place++;
-        }
-    }
-
-    private PriorityQueue<SlalomResult> getFinalRanking(List<SlalomResult> results){
-        PriorityQueue<SlalomResult> ranking = new PriorityQueue<>(Comparator
-                .comparing(SlalomResult::isDNF)
-                .thenComparing(SlalomResult::getTotalTime)
-        );
-        ranking.addAll(results);
-        return ranking;
+        super.printFinalRanking(slalomCompetition.getResults(), athleteService);
     }
 }
