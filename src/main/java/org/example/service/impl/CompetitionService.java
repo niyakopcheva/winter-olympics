@@ -4,17 +4,53 @@ import org.example.data.Athlete;
 import org.example.data.Competition;
 import org.example.data.Olympiad;
 import org.example.data.Result;
+import org.example.data.SkiSlalom.SlalomResult;
 import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.service.ICompetitionService;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class CompetitionService<C extends Competition> implements ICompetitionService<C> {
     public abstract void inputResults(C competition, AthleteService athleteService, Olympiad olympiad);
-    public abstract void calculateRankings(C competition);
-    public abstract void printMedalists(C competition, AthleteService athleteService);
+
+    public void calculateRankings(C competition, List<Result> competitionResults){
+        calculateTotalTimes(competition);
+
+        competitionResults.sort(Comparator
+                .comparing(Result::isDNF)
+                .thenComparing(
+                        Result::getTotalTime,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                )
+        );
+    }
+    public void printMedalists(C competition, List<Result> competitionResults, AthleteService athleteService, String compName){
+        calculateRankings(competition, competitionResults);
+
+        System.out.println("\n-----" + compName + " MEDALISTS-----");
+        String[] podiumEmojis = {"🥇", "🥈", "🥉"};
+
+        List<Result> medalists = competitionResults.stream()
+                .filter(r -> !r.isDNF())
+                .limit(3)
+                .collect(Collectors.toList());
+
+        if (medalists.isEmpty()) {
+            System.out.println("No athletes successfully finished the race. No medals awarded.");
+            return;
+        }
+
+        for (int i = 0; i < medalists.size(); i++) {
+            Result result = medalists.get(i);
+            Athlete athlete = athleteService.getAthleteById(result.getAthleteId())
+                    .orElseThrow(() -> new AthleteDoesNotExist());
+
+            System.out.println(podiumEmojis[i] + ": " + athlete.getName() + " " + athlete.getCountry() + " | Time: " + result.getTotalTime());
+        }
+    }
 
     protected <T extends Result> void coreCalculateTotalTimes(List<T> results, Function<T, Duration> formula) {
         for(T result : results){

@@ -87,43 +87,4 @@ public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition> i
             inputSecondRun(competition, athlete.getId(), time2);
         }
     }
-
-    @Override
-    public void calculateRankings(SkiSlalomCompetition competition) {
-        calculateTotalTimes(competition);
-
-        competition.getResults().sort(Comparator
-                .comparing(Result::isDNF)
-                .thenComparing(
-                        Result::getTotalTime,
-                        Comparator.nullsLast(Comparator.naturalOrder())
-                )
-        );
-    }
-
-    @Override
-    public void printMedalists(SkiSlalomCompetition competition, AthleteService athleteService) {
-        calculateRankings(competition);
-
-        System.out.println("\n-----SKI SLALOM MEDALISTS-----");
-        String[] podiumEmojis = {"🥇", "🥈", "🥉"};
-
-        List<SlalomResult> medalists = competition.getResults().stream()
-                .filter(r -> !r.isDNF())
-                .limit(3)
-                .collect(Collectors.toList());
-
-        if (medalists.isEmpty()) {
-            System.out.println("No athletes successfully finished the race. No medals awarded.");
-            return;
-        }
-
-        for (int i = 0; i < medalists.size(); i++) {
-            SlalomResult result = medalists.get(i);
-            Athlete athlete = athleteService.getAthleteById(result.getAthleteId())
-                    .orElseThrow(() -> new AthleteDoesNotExist());
-
-            System.out.println(podiumEmojis[i] + ": " + athlete.getName() + " " + athlete.getCountry() + " | Time: " + result.getTotalTime());
-        }
-    }
 }
