@@ -6,7 +6,6 @@ import org.example.data.Olympiad;
 import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.service.IAthleteService;
 
-import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 

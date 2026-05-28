@@ -2,7 +2,6 @@ package org.example.service;
 
 import org.example.data.SkiSlalom.SkiSlalomCompetition;
 import org.example.data.SkiSlalom.SlalomResult;
-import org.example.service.impl.AthleteService;
 
 import java.time.Duration;
 import java.util.List;

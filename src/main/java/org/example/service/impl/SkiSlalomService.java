@@ -2,10 +2,8 @@ package org.example.service.impl;
 
 import org.example.data.Athlete;
 import org.example.data.Olympiad;
-import org.example.data.Result;
 import org.example.data.SkiSlalom.SkiSlalomCompetition;
 import org.example.data.SkiSlalom.SlalomResult;
-import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.data.exceptions.AthleteNotQualifiedException;
 import org.example.service.ISkiSlalomService;
 
