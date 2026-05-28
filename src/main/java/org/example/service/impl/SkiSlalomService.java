@@ -1,7 +1,11 @@
 package org.example.service.impl;
 
+import org.example.data.Athlete;
+import org.example.data.Olympiad;
+import org.example.data.Result;
 import org.example.data.SkiSlalom.SkiSlalomCompetition;
 import org.example.data.SkiSlalom.SlalomResult;
+import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.data.exceptions.AthleteNotQualifiedException;
 import org.example.service.ISkiSlalomService;
 
@@ -9,7 +13,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SkiSlalomService extends CompetitionService implements ISkiSlalomService {
+public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition> implements ISkiSlalomService {
 
     @Override
     public boolean inputFirstRun(SkiSlalomCompetition competition, UUID athleteId, Duration time) {
@@ -54,5 +58,72 @@ public class SkiSlalomService extends CompetitionService implements ISkiSlalomSe
     @Override
     public void printFinalRanking(SkiSlalomCompetition slalomCompetition, AthleteService athleteService) {
         super.printFinalRanking(slalomCompetition.getResults(), athleteService);
+    }
+
+    @Override
+    public void inputResults(SkiSlalomCompetition competition, AthleteService athleteService, Olympiad olympiad) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("\n-----FIRST RUN-----");
+        for(Athlete athlete : athleteService.getAllAthletes()){
+            if(!athleteService.isEligibleForCompetition(athlete.getId(), competition, olympiad))
+                continue;
+
+            System.out.println("Enter first run time for " + athlete.getName() + " in seconds (or type 'DNF)': ");
+            String rawInput = input.nextLine();
+
+            Duration time1 = parseEnteredTime(input, rawInput);
+            inputFirstRun(competition, athlete.getId(), time1);
+        }
+
+        List<SlalomResult> qualifiedForSecondRun = filterToSecondRun(competition);
+        System.out.println("\n-----SECOND RUN-----");
+        for(SlalomResult result : qualifiedForSecondRun){
+            Athlete athlete = athleteService.getAthleteById(result.getAthleteId()).get();
+            System.out.println("Enter second run time for " + athlete.getName() + " in seconds (or type 'DNF)': ");
+            String rawInput = input.nextLine();
+
+            Duration time2 = parseEnteredTime(input, rawInput);
+            inputSecondRun(competition, athlete.getId(), time2);
+        }
+    }
+
+    @Override
+    public void calculateRankings(SkiSlalomCompetition competition) {
+        calculateTotalTimes(competition);
+
+        competition.getResults().sort(Comparator
+                .comparing(Result::isDNF)
+                .thenComparing(
+                        Result::getTotalTime,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                )
+        );
+    }
+
+    @Override
+    public void printMedalists(SkiSlalomCompetition competition, AthleteService athleteService) {
+        calculateRankings(competition);
+
+        System.out.println("\n-----SKI SLALOM MEDALISTS-----");
+        String[] podiumEmojis = {"🥇", "🥈", "🥉"};
+
+        List<SlalomResult> medalists = competition.getResults().stream()
+                .filter(r -> !r.isDNF())
+                .limit(3)
+                .collect(Collectors.toList());
+
+        if (medalists.isEmpty()) {
+            System.out.println("No athletes successfully finished the race. No medals awarded.");
+            return;
+        }
+
+        for (int i = 0; i < medalists.size(); i++) {
+            SlalomResult result = medalists.get(i);
+            Athlete athlete = athleteService.getAthleteById(result.getAthleteId())
+                    .orElseThrow(() -> new AthleteDoesNotExist());
+
+            System.out.println(podiumEmojis[i] + ": " + athlete.getName() + " " + athlete.getCountry() + " | Time: " + result.getTotalTime());
+        }
     }
 }
