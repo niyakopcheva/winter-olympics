@@ -8,10 +8,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
-public interface ISkiSlalomService {
+public interface ISkiSlalomService extends ICompetitionService<SkiSlalomCompetition> {
     boolean inputFirstRun(SkiSlalomCompetition competition, UUID athleteId, Duration time);
     List<SlalomResult> filterToSecondRun(SkiSlalomCompetition skiSlalomCompetition);
     void inputSecondRun(SkiSlalomCompetition competition, UUID athleteId, Duration time);
-    void calculateTotalTimes(SkiSlalomCompetition slalomCompetition);
-    void printFinalRanking(SkiSlalomCompetition slalomCompetition, AthleteService athleteService);
 }

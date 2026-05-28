@@ -1,12 +1,13 @@
 package org.example.service;
 
-import org.example.data.Athlete;
 import org.example.data.Competition;
+import org.example.data.Olympiad;
+import org.example.service.impl.AthleteService;
 
-import java.util.UUID;
-
-public interface ICompetitionService {
-    void inputResults(Competition competition);
-    void calculateRankings(Competition competition);
-    void printMedalists(Competition competition);
+public interface ICompetitionService<C extends Competition> {
+    void inputResults(C competition, AthleteService athleteService, Olympiad olympiad);
+    void calculateRankings(C competition);
+    void printMedalists(C competition);
+    void calculateTotalTimes(C competition);
+    void printFinalRanking(C competition, AthleteService athleteService);
 }

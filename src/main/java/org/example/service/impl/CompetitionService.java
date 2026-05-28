@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import org.example.data.Athlete;
 import org.example.data.Competition;
+import org.example.data.Olympiad;
 import org.example.data.Result;
 import org.example.data.exceptions.AthleteDoesNotExist;
 import org.example.service.ICompetitionService;
@@ -11,21 +12,10 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CompetitionService implements ICompetitionService {
-    @Override
-    public void inputResults(Competition competition) {
-
-    }
-
-    @Override
-    public void calculateRankings(Competition competition) {
-
-    }
-
-    @Override
-    public void printMedalists(Competition competition) {
-
-    }
+public abstract class CompetitionService<C extends Competition> implements ICompetitionService<C> {
+    public abstract void inputResults(C competition, AthleteService athleteService, Olympiad olympiad);
+    public abstract void calculateRankings(C competition);
+    public abstract void printMedalists(C competition);
 
     protected <T extends Result> void coreCalculateTotalTimes(List<T> results, Function<T, Duration> formula) {
         for(T result : results){
