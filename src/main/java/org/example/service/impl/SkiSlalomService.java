@@ -11,14 +11,21 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition> implements ISkiSlalomService {
+public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition, SlalomResult> implements ISkiSlalomService {
+    protected SkiSlalomService(ResultService resultService) {
+        super(resultService);
+    }
 
     @Override
+    protected List<SlalomResult> getResults(SkiSlalomCompetition competition) {
+        return competition.getResults();
+    }
+    @Override
     public boolean inputFirstRun(SkiSlalomCompetition competition, UUID athleteId, Duration time) {
-        SlalomResult slalomResult = new SlalomResult(athleteId);
         if(competition.getResults().stream().anyMatch(r -> r.getAthleteId().equals(athleteId)))
             return false;
 
+        SlalomResult slalomResult = new SlalomResult(athleteId);
         slalomResult.setFirstRunTime(time);
         return competition.getResults().add(slalomResult);
     }
@@ -48,15 +55,12 @@ public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition> i
     }
 
     @Override
-    public void calculateTotalTimes(SkiSlalomCompetition slalomCompetition) {
-        coreCalculateTotalTimes(slalomCompetition.getResults(),
-                r -> r.getFirstRunTime().plus(r.getSecondRunTime()));
+    public void printFinalRanking(SkiSlalomCompetition slalomCompetition, AthleteService athleteService) {
+        calculateRankings(slalomCompetition);
+        super.printFinalRanking(slalomCompetition, athleteService);
     }
 
-    @Override
-    public void printFinalRanking(SkiSlalomCompetition slalomCompetition, AthleteService athleteService) {
-        super.printFinalRanking(slalomCompetition.getResults(), athleteService);
-    }
+
 
     @Override
     public void inputResults(SkiSlalomCompetition competition, AthleteService athleteService, Olympiad olympiad) {

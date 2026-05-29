@@ -9,31 +9,45 @@ import org.example.service.ICompetitionService;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class CompetitionService<C extends Competition> implements ICompetitionService<C> {
+public abstract class CompetitionService<C extends Competition, R extends Result> implements ICompetitionService<C> {
+    protected final ResultService resultService;
+    protected final Map<UUID, Duration> totalTimes;
+
+    protected CompetitionService(ResultService resultService) {
+        this.resultService = resultService;
+        this.totalTimes = new HashMap<>();
+    }
+
+    protected abstract List<R> getResults(C competition);
+
     public abstract void inputResults(C competition, AthleteService athleteService, Olympiad olympiad);
 
-    public void calculateRankings(C competition, List<Result> competitionResults){
-        calculateTotalTimes(competition);
+    public void calculateRankings(C competition){
+        List<R> competitionResults = getResults(competition);
+        competitionResults.removeIf(Result::isDNF);
+
+        totalTimes.clear();
+
+        for(R result : competitionResults){
+                Duration totalTime = resultService.calculateTotalTime(result, competition);
+                totalTimes.put(result.getAthleteId(), totalTime);
+        }
 
         competitionResults.sort(Comparator
                 .comparing(Result::isDNF)
-                .thenComparing(
-                        Result::getTotalTime,
-                        Comparator.nullsLast(Comparator.naturalOrder())
-                )
+                .thenComparing(r -> totalTimes.get(r.getAthleteId()))
         );
     }
-    public void printMedalists(C competition, List<Result> competitionResults, AthleteService athleteService, String compName){
-        calculateRankings(competition, competitionResults);
+
+    public void printMedalists(C competition, AthleteService athleteService, String compName){
+        calculateRankings(competition);
 
         System.out.println("\n-----" + compName + " MEDALISTS-----");
         String[] podiumEmojis = {"🥇", "🥈", "🥉"};
 
-        List<Result> medalists = competitionResults.stream()
-                .filter(r -> !r.isDNF())
+        List<R> medalists = getResults(competition).stream()
                 .limit(3)
                 .collect(Collectors.toList());
 
@@ -43,45 +57,31 @@ public abstract class CompetitionService<C extends Competition> implements IComp
         }
 
         for (int i = 0; i < medalists.size(); i++) {
-            Result result = medalists.get(i);
+            R result = medalists.get(i);
             Athlete athlete = athleteService.getAthleteById(result.getAthleteId())
                     .orElseThrow(() -> new AthleteDoesNotExist());
 
-            System.out.println(podiumEmojis[i] + ": " + athlete.getName() + " " + athlete.getCountry() + " | Time: " + result.getTotalTime());
+            Duration time = totalTimes.get(result.getAthleteId());
+            System.out.println(podiumEmojis[i] + ": " + athlete.getName() + " " + athlete.getCountry() + " | Time: " + time);
         }
     }
 
-    protected <T extends Result> void coreCalculateTotalTimes(List<T> results, Function<T, Duration> formula) {
-        for(T result : results){
-            if(result.isDNF())
-                result.setTotalTime(null);
-            else
-                result.setTotalTime(formula.apply(result));
-        }
-    }
 
-//    protected <T extends Result> PriorityQueue<T> getFinalRanking(List<T> results){
-//        List<T> finished = results.stream()
-//                .filter(r -> !r.isDNF())
-//                .collect(Collectors.toList());
-//        PriorityQueue<T> ranking = new PriorityQueue<>(Comparator
-//                .comparing(Result::getTotalTime)
-//        );
-//        ranking.addAll(finished);
-//        return ranking;
-//    }
-
-    protected <T extends Result> void printFinalRanking(List<T> results, AthleteService athleteService) {
+    public void printFinalRanking(C competition, AthleteService athleteService) {
         int place = 1;
-        for(Result result : results){
+        List<R> results = getResults(competition);
+
+        for(R result : results){
             Optional<Athlete> athleteOpt = athleteService.getAthleteById(result.getAthleteId());
             if(athleteOpt.isEmpty()) throw new AthleteDoesNotExist();
 
             Athlete athlete = athleteOpt.get();
+            Duration time = totalTimes.get(result.getAthleteId());
+
             System.out.println(place + ". " +
                     athlete.getName() + " - " +
                     athlete.getCountry() + " | " +
-                    (result.isDNF() ? "DNF" : result.getTotalTime().toString())
+                    String.format("%03d:%o3d", time.toSecondsPart(), time.toMillisPart())
             );
             place++;
         }

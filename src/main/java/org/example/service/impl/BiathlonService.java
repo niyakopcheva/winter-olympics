@@ -9,7 +9,16 @@ import org.example.service.IBiathlonService;
 import java.time.Duration;
 import java.util.*;
 
-public class BiathlonService extends CompetitionService<BiathlonCompetition> implements IBiathlonService {
+public class BiathlonService extends CompetitionService<BiathlonCompetition, BiathlonResult> implements IBiathlonService {
+
+    protected BiathlonService(ResultService resultService) {
+        super(resultService);
+    }
+
+    @Override
+    protected List<BiathlonResult> getResults(BiathlonCompetition competition) {
+        return competition.getResults();
+    }
 
     @Override
     public boolean inputRuntime(BiathlonCompetition competition, UUID athleteId, Duration time) {
@@ -47,22 +56,16 @@ public class BiathlonService extends CompetitionService<BiathlonCompetition> imp
         }
     }
 
-    @Override
-    public Duration calculatePenalty(BiathlonCompetition competition, BiathlonResult result) {
-        if(result.isDNF())
-            return null;
-        return competition.getTimePenalty().multipliedBy(result.getMissedShots());
-    }
-
-    @Override
-    public void calculateTotalTimes(BiathlonCompetition competition) {
-        coreCalculateTotalTimes(competition.getResults(),
-                r -> calculatePenalty(competition, r).plus(r.getRunTime()));
-    }
+//    @Override
+//    public void calculateTotalTimes(BiathlonCompetition competition) {
+//        coreCalculateTotalTimes(competition.getResults(),
+//                r -> calculatePenalty(competition, r).plus(r.getRunTime()));
+//    }
 
     @Override
     public void printFinalRanking(BiathlonCompetition competition, AthleteService athleteService) {
-        super.printFinalRanking(competition.getResults(), athleteService);
+        calculateRankings(competition);
+        super.printFinalRanking(competition, athleteService);
     }
 
     @Override
