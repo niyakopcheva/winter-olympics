@@ -104,4 +104,8 @@ public abstract class CompetitionService<C extends Competition, R extends Result
             }
         }
     }
+
+    public ResultService getResultService() {
+        return resultService;
+    }
 }
