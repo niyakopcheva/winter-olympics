@@ -1,11 +1,9 @@
 package org.example.data;
 import java.io.Serializable;
-import java.time.Duration;
 import java.util.UUID;
 
 public abstract class Result implements Serializable {
     private final UUID athleteId;
-    private Duration totalTime = Duration.ofMillis(0);
     private boolean isDNF = false;
 
     public Result(UUID athleteId) {
@@ -14,15 +12,6 @@ public abstract class Result implements Serializable {
 
     public UUID getAthleteId() {
         return athleteId;
-    }
-
-    public Duration getTotalTime() {
-        return totalTime;
-    }
-
-    public void setTotalTime(Duration totalTime) {
-
-        this.totalTime = totalTime;
     }
 
     public boolean isDNF() {
@@ -35,6 +24,8 @@ public abstract class Result implements Serializable {
 
     @Override
     public String toString() {
-        return "Result{" + "athleteId=" + athleteId + ", totalTime=" + totalTime + ", isDNF=" + isDNF + '}';
+        return "Result{" + "athleteId=" + athleteId + ", isDNF=" + isDNF + '}';
     }
 }
+
+
