@@ -81,7 +81,7 @@ public abstract class CompetitionService<C extends Competition, R extends Result
             System.out.println(place + ". " +
                     athlete.getName() + " - " +
                     athlete.getCountry() + " | " +
-                    String.format("%03d:%o3d", time.toSecondsPart(), time.toMillisPart())
+                    String.format("%03d:%03d", time.toSecondsPart(), time.toMillisPart())
             );
             place++;
         }

@@ -11,7 +11,7 @@ import java.util.*;
 
 public class BiathlonService extends CompetitionService<BiathlonCompetition, BiathlonResult> implements IBiathlonService {
 
-    protected BiathlonService(ResultService resultService) {
+    public BiathlonService(ResultService resultService) {
         super(resultService);
     }
 

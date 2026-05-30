@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition, SlalomResult> implements ISkiSlalomService {
-    protected SkiSlalomService(ResultService resultService) {
+    public SkiSlalomService(ResultService resultService) {
         super(resultService);
     }
 
