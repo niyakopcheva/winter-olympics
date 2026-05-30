@@ -119,7 +119,7 @@ public class OlympiadService implements IOlympiadService {
                     biathlonService.calculateRankings(biathlon);
                     ranking = biathlonService.getResults(biathlon);
                     resultService = biathlonService.getResultService();
-                    compName = "SKI SLALOM";
+                    compName = "BIATHLON";
                 }
 
                 compName += " (" + competition.getSex() + " - Min Age: " + competition.getMinAge() + ")";
@@ -139,7 +139,7 @@ public class OlympiadService implements IOlympiadService {
                         writer.println((place + ". " +
                                 athlete.getName() + " - " +
                                 athlete.getCountry() + " | " +
-                                String.format("%03d:%03d", time.toSecondsPart(), time.toMillisPart())
+                                String.format("%02d:%02d:%03d", time.toMinutesPart(), time.toSecondsPart(), time.toMillisPart())
                         ));
                         place++;
                     }

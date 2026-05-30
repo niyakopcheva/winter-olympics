@@ -21,9 +21,7 @@ public class SlalomResult extends Result {
     public void setFirstRunTime(Duration firstRunTime) throws NegativeValueException {
         if (firstRunTime == null) {
             setDNF(true);
-        }
-
-        if(firstRunTime.isNegative() || firstRunTime.isZero())
+        } else if(firstRunTime.isNegative() || firstRunTime.isZero())
             throw new NegativeValueException("FirstRunTime must be a positive value!");
 
         this.firstRunTime = firstRunTime;
@@ -36,10 +34,7 @@ public class SlalomResult extends Result {
     public void setSecondRunTime(Duration secondRunTime) throws NegativeValueException{
         if (secondRunTime == null) {
             setDNF(true);
-            return;
-        }
-
-        if(secondRunTime.isNegative() || secondRunTime.isZero())
+        } else if(secondRunTime.isNegative() || secondRunTime.isZero())
             throw new NegativeValueException("SecondRunTime must be a positive value!");
 
         this.secondRunTime = secondRunTime;
