@@ -1,9 +1,10 @@
-package org.example.service.impl;
+package org.example.service.UI;
 
 import org.example.data.Athlete;
 import org.example.data.enums.Country;
 import org.example.data.enums.Sex;
 import org.example.data.exceptions.NegativeValueException;
+import org.example.service.impl.AthleteService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

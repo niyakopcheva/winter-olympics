@@ -8,9 +8,9 @@ public class Olympiad {
     private final LocalDate startDate;
     private List<Competition> competitions;
 
-    public Olympiad(LocalDate startDate, List<Competition> competitions) {
+    public Olympiad(LocalDate startDate) {
         this.startDate = startDate;
-        setCompetitions(competitions);
+        this.competitions = new ArrayList<>();
     }
 
     public LocalDate getStartDate() {
