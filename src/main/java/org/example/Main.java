@@ -5,6 +5,7 @@ import org.example.data.Biathlon.BiathlonCompetition;
 import org.example.data.Competition;
 import org.example.data.Olympiad;
 import org.example.data.SkiSlalom.SkiSlalomCompetition;
+import org.example.data.enums.Country;
 import org.example.service.UI.AthleteInput;
 import org.example.service.UI.CompetitionInput;
 import org.example.service.impl.*;
@@ -12,7 +13,7 @@ import org.example.service.impl.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -88,6 +89,35 @@ public class Main {
             System.out.println("Success! Check final_rankings.txt for Olympiad rankings.");
         } catch (IOException e){
             System.out.println("Failed to generate file: " + e.getMessage());
+        }
+
+        // PRINT MEDALISTS
+        System.out.println("\nMEDALISTS");
+        for(Competition competition : olympiad.getCompetitions()){
+            if(competition instanceof SkiSlalomCompetition){
+                SkiSlalomCompetition slalom = (SkiSlalomCompetition) competition;
+                slalomService.printMedalists(slalom, athleteService, "SKI SLALOM - " + slalom.getSex());
+            }
+            else if(competition instanceof BiathlonCompetition) {
+                BiathlonCompetition biathlon = (BiathlonCompetition) competition;
+                biathlonService.printMedalists(biathlon, athleteService, "SKI SLALOM - " + biathlon.getSex());
+            }
+        }
+
+        // PRINT STATS
+        System.out.println("OLYMPIAD STATISTICS");
+        System.out.println("\nAverage participant age: " + olympiadService.calculateAverageParticipantAge(olympiad));
+        Optional<Athlete> youngestMedalist = olympiadService.getYoungestMedalist(olympiad);
+        if(youngestMedalist.isEmpty())
+            System.out.println("\nNo medalists. There is no youngest medalist.");
+        else
+            System.out.println("Youngest medalist: " + youngestMedalist.get() + " - " +
+                    athleteService.calcAge(youngestMedalist.get(), olympiad) + " years old");
+
+        System.out.println("Medals by country:");
+        Map<Country, Integer> medalsByCountry = olympiadService.getMedalCountByCountry(olympiad);
+        for(Map.Entry<Country, Integer> entry : medalsByCountry.entrySet()){
+            System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
 }

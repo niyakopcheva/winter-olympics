@@ -69,7 +69,7 @@ public class CompetitionInput {
         while (true) {
             try {
                 int age = Integer.parseInt(inputStr);
-                if (age < 0) throw new NumberFormatException(); // Guard against negative values
+                if (age < 0) throw new NumberFormatException();
                 return age;
             } catch (NumberFormatException e) {
                 System.out.print("!!! Invalid number !!! Enter a positive integer for minimum age: ");

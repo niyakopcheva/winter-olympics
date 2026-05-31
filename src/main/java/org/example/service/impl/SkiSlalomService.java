@@ -79,6 +79,12 @@ public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition, S
         }
 
         List<SlalomResult> qualifiedForSecondRun = filterToSecondRun(competition);
+
+        for(SlalomResult result : competition.getResults()){
+            if(!qualifiedForSecondRun.contains(result))
+                result.setDNF(true);
+        }
+
         System.out.println("\n-----SECOND RUN-----");
         for(SlalomResult result : qualifiedForSecondRun){
             Athlete athlete = athleteService.getAthleteById(result.getAthleteId()).get();

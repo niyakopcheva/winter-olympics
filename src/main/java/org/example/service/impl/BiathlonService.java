@@ -4,6 +4,7 @@ import org.example.data.Athlete;
 import org.example.data.Biathlon.BiathlonCompetition;
 import org.example.data.Biathlon.BiathlonResult;
 import org.example.data.Olympiad;
+import org.example.data.exceptions.NegativeValueException;
 import org.example.service.IBiathlonService;
 
 import java.time.Duration;
@@ -104,9 +105,15 @@ public class BiathlonService extends CompetitionService<BiathlonCompetition, Bia
             }
 
             try {
-                return Integer.parseInt(inputStr);
+                int shots = Integer.parseInt(inputStr);
+                if(shots < 0)
+                    throw new NegativeValueException("!!! Missed shots must NOT be negative !!! try again: ");
+                return shots;
             } catch (NumberFormatException e) {
                 System.out.print("!!! Invalid format entered !!! Try again: ");
+                inputStr = scanner.nextLine().trim();
+            } catch (NegativeValueException e){
+                System.out.print(e.getMessage());
                 inputStr = scanner.nextLine().trim();
             }
         }

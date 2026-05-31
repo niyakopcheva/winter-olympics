@@ -5,6 +5,7 @@ import org.example.data.Competition;
 import org.example.data.Olympiad;
 import org.example.data.Result;
 import org.example.data.exceptions.AthleteDoesNotExist;
+import org.example.data.exceptions.NegativeValueException;
 import org.example.service.ICompetitionService;
 
 import java.time.Duration;
@@ -36,8 +37,7 @@ public abstract class CompetitionService<C extends Competition, R extends Result
         }
 
         competitionResults.sort(Comparator
-                .comparing(Result::isDNF)
-                .thenComparing(r -> totalTimes.get(r.getAthleteId()))
+                .comparing(r -> totalTimes.get(r.getAthleteId()))
         );
     }
 
@@ -62,7 +62,11 @@ public abstract class CompetitionService<C extends Competition, R extends Result
                     .orElseThrow(() -> new AthleteDoesNotExist());
 
             Duration time = totalTimes.get(result.getAthleteId());
-            System.out.println(podiumEmojis[i] + ": " + athlete.getName() + " " + athlete.getCountry() + " | Time: " + time);
+            System.out.println(podiumEmojis[i] +
+                    " " + athlete.getName() +
+                    " " + athlete.getCountry() +
+                    " | Time: " +
+                    String.format("%02d:%02d:%03d", time.toMinutesPart(), time.toSecondsPart(), time.toMillisPart()));
         }
     }
 
@@ -97,9 +101,15 @@ public abstract class CompetitionService<C extends Competition, R extends Result
 
             try {
                 double seconds = Double.parseDouble(inputStr);
-                return Duration.ofMillis((long) (seconds * 1000));
+                Duration time = Duration.ofMillis((long) (seconds * 1000));
+                if(time.isNegative() || time.isZero())
+                    throw new NegativeValueException("!!! Time must be a positive number !!! Try again: ");
+                return time;
             } catch (NumberFormatException e) {
                 System.out.print("!!! Invalid format entered !!! Try again: ");
+                inputStr = scanner.nextLine().trim();
+            } catch (NegativeValueException e){
+                System.out.println(e.getMessage());
                 inputStr = scanner.nextLine().trim();
             }
         }
