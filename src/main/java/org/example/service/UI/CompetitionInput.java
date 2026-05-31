@@ -63,7 +63,7 @@ public class CompetitionInput {
         }
     }
 
-    private int parseEnteredInt(Scanner scanner) {
+    protected int parseEnteredInt(Scanner scanner) {  //Test
         System.out.print("Enter minimum age requirement rule: ");
         String inputStr = scanner.nextLine().trim();
         while (true) {
