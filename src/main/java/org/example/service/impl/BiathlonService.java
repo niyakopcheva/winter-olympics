@@ -96,7 +96,7 @@ public class BiathlonService extends CompetitionService<BiathlonCompetition, Bia
         }
     }
 
-    private Integer parseEnteredInt(Scanner scanner, String initialInput){
+    protected Integer parseEnteredInt(Scanner scanner, String initialInput){
         String inputStr = initialInput.trim();
 
         while (true) {

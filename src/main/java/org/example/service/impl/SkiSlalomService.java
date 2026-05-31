@@ -43,7 +43,7 @@ public class SkiSlalomService extends CompetitionService<SkiSlalomCompetition, S
     }
 
     @Override
-    public void inputSecondRun(SkiSlalomCompetition competition, UUID athleteId, Duration time) {
+    public void inputSecondRun(SkiSlalomCompetition competition, UUID athleteId, Duration time) throws  AthleteNotQualifiedException{
         List<SlalomResult> qualified = filterToSecondRun(competition);
         Optional<SlalomResult> resultOpt = qualified.stream()
                 .filter(r -> r.getAthleteId().equals(athleteId))
